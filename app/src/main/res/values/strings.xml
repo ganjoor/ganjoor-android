@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">گنجور</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_dashboard">شاعران</string>
+    <string name="title_bookmark">نشان‌شده‌ها</string>
+    <string name="title_search">جستجو</string>
+    <string name="title_settings">تنظیمات</string>
 </resources>
