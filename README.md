@@ -1,5 +1,6 @@
 ## Android Client for Ganjoor.net
 Material design client for Android, use official [Ganjoor/API].
+[![Build Status](https://travis-ci.org/ganjoor/ganjoor-android.svg?branch=master)](https://travis-ci.org/ganjoor/ganjoor-android)
 
 **Requirements**
 - JDK 8
