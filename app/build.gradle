@@ -20,14 +20,29 @@ android {
     }
 }
 
+ext {
+    SupportLib = '25.3.0'
+    ButterKnifeVersion = '8.5.1'
+}
+
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-annotations:25.0.0'
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.android.support:design:25.2.0'
-    compile 'com.android.support:support-vector-drawable:25.2.0'
+    compile "com.android.support:appcompat-v7:$SupportLib"
+    compile "com.android.support:design:$SupportLib"
+    compile "com.android.support:support-vector-drawable:$SupportLib"
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     testCompile 'junit:junit:4.12'
+
+    //ButterKnife
+    compile "com.jakewharton:butterknife:$ButterKnifeVersion"
+    annotationProcessor "com.jakewharton:butterknife-compiler:$ButterKnifeVersion"
 }
