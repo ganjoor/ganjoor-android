@@ -8,8 +8,8 @@ import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
 import net.ganjoor.R;
-import net.ganjoor.ui.fragments.DashboardFragment;
-import net.ganjoor.ui.fragments.GeneralFragment;
+import net.ganjoor.ui.fragment.DashboardFragment;
+import net.ganjoor.ui.fragment.GeneralFragment;
 
 public class NavigationUtils {
 
