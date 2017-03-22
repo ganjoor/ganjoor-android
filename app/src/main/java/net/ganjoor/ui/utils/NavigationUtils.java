@@ -12,6 +12,7 @@ import net.ganjoor.ui.fragment.BookmarkFragment;
 import net.ganjoor.ui.fragment.DashboardFragment;
 import net.ganjoor.ui.fragment.GeneralFragment;
 import net.ganjoor.ui.fragment.SearchFragment;
+import net.ganjoor.ui.fragment.SettingsFragment;
 
 public class NavigationUtils {
 
@@ -51,7 +52,7 @@ public class NavigationUtils {
                     mFragment = new SearchFragment().newInstance(R.string.title_search);
                     break;
                 case R.id.navigation_settings:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_settings);
+                    mFragment = new SettingsFragment().newInstance(R.string.title_settings);
                     break;
             }
             doTransaction();
