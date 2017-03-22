@@ -8,7 +8,11 @@ import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
 import net.ganjoor.R;
-import net.ganjoor.ui.fragments.GeneralFragment;
+import net.ganjoor.ui.fragment.BookmarkFragment;
+import net.ganjoor.ui.fragment.DashboardFragment;
+import net.ganjoor.ui.fragment.GeneralFragment;
+import net.ganjoor.ui.fragment.SearchFragment;
+import net.ganjoor.ui.fragment.SettingsFragment;
 
 public class NavigationUtils {
 
@@ -21,7 +25,7 @@ public class NavigationUtils {
     public NavigationUtils(@IdRes int contentFrameLayout, FragmentManager fragmentManager) {
         this.mContentFrameLayout = contentFrameLayout;
         this.mFragmentManager = fragmentManager;
-        mFragment = new GeneralFragment().newInstance(R.string.title_dashboard);
+        this.mFragment = new GeneralFragment().newInstance(R.string.title_dashboard);
         doTransaction();
     }
 
@@ -39,16 +43,16 @@ public class NavigationUtils {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_dashboard:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_dashboard);
+                    mFragment = new DashboardFragment().newInstance(R.string.title_dashboard);
                     break;
                 case R.id.navigation_bookmark:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_bookmark);
+                    mFragment = new BookmarkFragment().newInstance(R.string.title_bookmark);
                     break;
                 case R.id.navigation_search:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_search);
+                    mFragment = new SearchFragment().newInstance(R.string.title_search);
                     break;
                 case R.id.navigation_settings:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_settings);
+                    mFragment = new SettingsFragment().newInstance(R.string.title_settings);
                     break;
             }
             doTransaction();
