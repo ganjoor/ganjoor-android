@@ -25,7 +25,7 @@ public class NavigationUtils {
     public NavigationUtils(@IdRes int contentFrameLayout, FragmentManager fragmentManager) {
         this.mContentFrameLayout = contentFrameLayout;
         this.mFragmentManager = fragmentManager;
-        mFragment = new GeneralFragment().newInstance(R.string.title_dashboard);
+        this.mFragment = new GeneralFragment().newInstance(R.string.title_dashboard);
         doTransaction();
     }
 

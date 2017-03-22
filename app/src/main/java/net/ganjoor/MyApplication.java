@@ -12,6 +12,5 @@ public class MyApplication extends Application {
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                 .setDefaultFontPath("fonts/DroidNaskh-Regular.ttf")
                 .setFontAttrId(R.attr.fontPath).build());
-
     }
 }
