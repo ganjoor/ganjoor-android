@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
 import net.ganjoor.R;
+import net.ganjoor.ui.fragments.DashboardFragment;
 import net.ganjoor.ui.fragments.GeneralFragment;
 
 public class NavigationUtils {
@@ -39,7 +40,7 @@ public class NavigationUtils {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_dashboard:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_dashboard);
+                    mFragment = new DashboardFragment().newInstance(R.string.title_dashboard);
                     break;
                 case R.id.navigation_bookmark:
                     mFragment = new GeneralFragment().newInstance(R.string.title_bookmark);
