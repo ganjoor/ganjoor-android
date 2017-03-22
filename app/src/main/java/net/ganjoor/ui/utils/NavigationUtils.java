@@ -8,8 +8,10 @@ import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
 import net.ganjoor.R;
+import net.ganjoor.ui.fragment.BookmarkFragment;
 import net.ganjoor.ui.fragment.DashboardFragment;
 import net.ganjoor.ui.fragment.GeneralFragment;
+import net.ganjoor.ui.fragment.SearchFragment;
 
 public class NavigationUtils {
 
@@ -43,10 +45,10 @@ public class NavigationUtils {
                     mFragment = new DashboardFragment().newInstance(R.string.title_dashboard);
                     break;
                 case R.id.navigation_bookmark:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_bookmark);
+                    mFragment = new BookmarkFragment().newInstance(R.string.title_bookmark);
                     break;
                 case R.id.navigation_search:
-                    mFragment = new GeneralFragment().newInstance(R.string.title_search);
+                    mFragment = new SearchFragment().newInstance(R.string.title_search);
                     break;
                 case R.id.navigation_settings:
                     mFragment = new GeneralFragment().newInstance(R.string.title_settings);
