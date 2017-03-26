@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import net.ganjoor.R;
 import net.ganjoor.ui.fragment.BookmarkFragment;
 import net.ganjoor.ui.fragment.DashboardFragment;
-import net.ganjoor.ui.fragment.GeneralFragment;
 import net.ganjoor.ui.fragment.SearchFragment;
 import net.ganjoor.ui.fragment.SettingsFragment;
 
@@ -25,7 +24,7 @@ public class NavigationUtils {
     public NavigationUtils(@IdRes int contentFrameLayout, FragmentManager fragmentManager) {
         this.mContentFrameLayout = contentFrameLayout;
         this.mFragmentManager = fragmentManager;
-        this.mFragment = new GeneralFragment().newInstance(R.string.title_dashboard);
+        this.mFragment = new DashboardFragment().newInstance(R.string.title_dashboard);
         doTransaction();
     }
 
