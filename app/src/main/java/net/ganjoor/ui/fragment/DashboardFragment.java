@@ -1,22 +1,41 @@
 package net.ganjoor.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import net.ganjoor.R;
+import net.ganjoor.adapter.PoetAdapter;
+import net.ganjoor.model.Poet;
+import net.ganjoor.model.PoetPojo;
+import net.ganjoor.service.APIServices;
+import net.ganjoor.service.RetrofitUtils;
+import net.ganjoor.utils.AppUtils;
+import net.ganjoor.utils.GridSpacingItemDecoration;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class DashboardFragment extends Fragment {
-    private static final String INT_FRAGMENT = "INT_FRAGMENT";
-    @BindView(R.id.messageTextView)
-    TextView messageTextView;
+public class DashboardFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    @BindView(R.id.recycler_view)
+    RecyclerView recyclerView;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    private PoetAdapter adapter;
+    private List<Poet> poetList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,16 +49,52 @@ public class DashboardFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_dashboard,
                 container, false);
         ButterKnife.bind(this, view);
-        @StringRes int text = getArguments().getInt(INT_FRAGMENT);
-        messageTextView.setText(text);
+        poetList = new ArrayList<>();
+        adapter = new PoetAdapter(getActivity(), poetList);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10, getResources()), true));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(adapter);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.post(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        getPoets();
+                    }
+                }
+        );
         return view;
     }
 
-    public Fragment newInstance(@StringRes int resourceId) {
-        DashboardFragment mFragment = new DashboardFragment();
-        Bundle mBundle = new Bundle();
-        mBundle.putInt(INT_FRAGMENT, resourceId);
-        mFragment.setArguments(mBundle);
-        return mFragment;
+    private void getPoets() {
+        swipeRefreshLayout.setRefreshing(true);
+        APIServices apiServices = RetrofitUtils.getRetrofit().create(APIServices.class);
+        Call<PoetPojo> call = apiServices.poets();
+        call.enqueue(new Callback<PoetPojo>() {
+            @Override
+            public void onResponse(Call<PoetPojo> call, Response<PoetPojo> response) {
+                PoetPojo poetPojo = response.body();
+                poetList.clear();
+                poetList.addAll(poetPojo.getPoets());
+                adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
+            @Override
+            public void onFailure(Call<PoetPojo> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    public Fragment newInstance() {
+        return new DashboardFragment();
+    }
+
+    @Override
+    public void onRefresh() {
+        getPoets();
     }
 }
