@@ -18,7 +18,7 @@ public class FragmentAdapter implements FragmentNavigatorAdapter {
         Fragment mFragment = null;
         switch (position) {
             case 0:
-                mFragment = new DashboardFragment().newInstance(R.string.title_dashboard);
+                mFragment = new DashboardFragment().newInstance();
                 break;
             case 1:
                 mFragment = new BookmarkFragment().newInstance(R.string.title_bookmark);

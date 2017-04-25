@@ -3,4 +3,8 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="poet_title">#4c4c4c</color>
+    <color name="viewBg">#f1f5f8</color>
+    <color name="grey500">#9E9E9E</color>
+    <color name="blackT87">#DE000000</color>
 </resources>
