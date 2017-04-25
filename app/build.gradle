@@ -23,7 +23,7 @@ android {
 ext {
     SupportLib = '25.3.1'
     ButterKnifeVersion = '8.5.1'
-    RetrofitVersion='2.2.0'
+    RetrofitVersion = '2.2.0'
 }
 
 configurations.all {
@@ -40,6 +40,8 @@ dependencies {
     compile "com.android.support:appcompat-v7:$SupportLib"
     compile "com.android.support:design:$SupportLib"
     compile "com.android.support:support-vector-drawable:$SupportLib"
+    compile "com.android.support:cardview-v7:$SupportLib"
+
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.github.Aspsine:FragmentNavigator:1.0.2'
     testCompile 'junit:junit:4.12'
