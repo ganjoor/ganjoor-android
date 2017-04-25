@@ -21,7 +21,7 @@ android {
 }
 
 ext {
-    SupportLib = '25.3.0'
+    SupportLib = '25.3.1'
     ButterKnifeVersion = '8.5.1'
 }
 
@@ -40,6 +40,7 @@ dependencies {
     compile "com.android.support:design:$SupportLib"
     compile "com.android.support:support-vector-drawable:$SupportLib"
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.github.Aspsine:FragmentNavigator:1.0.2'
     testCompile 'junit:junit:4.12'
 
     //ButterKnife
