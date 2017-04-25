@@ -1,39 +1,22 @@
 package net.ganjoor.ui.utils;
 
-import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.MenuItem;
 
+import com.aspsine.fragmentnavigator.FragmentNavigator;
+
 import net.ganjoor.R;
-import net.ganjoor.ui.fragment.BookmarkFragment;
-import net.ganjoor.ui.fragment.DashboardFragment;
-import net.ganjoor.ui.fragment.SearchFragment;
-import net.ganjoor.ui.fragment.SettingsFragment;
 
 public class NavigationUtils {
 
-    private
-    @IdRes
-    int mContentFrameLayout;
-    private Fragment mFragment;
-    private FragmentManager mFragmentManager;
+    private FragmentNavigator fragmentNavigator;
 
-    public NavigationUtils(@IdRes int contentFrameLayout, FragmentManager fragmentManager) {
-        this.mContentFrameLayout = contentFrameLayout;
-        this.mFragmentManager = fragmentManager;
-        this.mFragment = new DashboardFragment().newInstance(R.string.title_dashboard);
-        doTransaction();
+    public NavigationUtils(FragmentNavigator fragmentNavigator) {
+        this.fragmentNavigator = fragmentNavigator;
+        fragmentNavigator.showFragment(0);
     }
 
-    private void doTransaction() {
-        if (mFragment != null) {
-            mFragmentManager.beginTransaction()
-                    .replace(mContentFrameLayout, mFragment).commit();
-        }
-    }
 
     public BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -42,19 +25,18 @@ public class NavigationUtils {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_dashboard:
-                    mFragment = new DashboardFragment().newInstance(R.string.title_dashboard);
+                    fragmentNavigator.showFragment(0);
                     break;
                 case R.id.navigation_bookmark:
-                    mFragment = new BookmarkFragment().newInstance(R.string.title_bookmark);
+                    fragmentNavigator.showFragment(1);
                     break;
                 case R.id.navigation_search:
-                    mFragment = new SearchFragment().newInstance(R.string.title_search);
+                    fragmentNavigator.showFragment(2);
                     break;
                 case R.id.navigation_settings:
-                    mFragment = new SettingsFragment().newInstance(R.string.title_settings);
+                    fragmentNavigator.showFragment(3);
                     break;
             }
-            doTransaction();
             return true;
         }
 
