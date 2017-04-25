@@ -23,6 +23,7 @@ android {
 ext {
     SupportLib = '25.3.1'
     ButterKnifeVersion = '8.5.1'
+    RetrofitVersion='2.2.0'
 }
 
 configurations.all {
@@ -46,4 +47,8 @@ dependencies {
     //ButterKnife
     compile "com.jakewharton:butterknife:$ButterKnifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$ButterKnifeVersion"
+
+    //retrofit
+    compile "com.squareup.retrofit2:retrofit:$RetrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$RetrofitVersion"
 }
