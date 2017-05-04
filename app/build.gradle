@@ -53,4 +53,6 @@ dependencies {
     //retrofit
     compile "com.squareup.retrofit2:retrofit:$RetrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$RetrofitVersion"
+    //use in development
+    compile 'com.squareup.okhttp3:logging-interceptor:3.7.0'
 }

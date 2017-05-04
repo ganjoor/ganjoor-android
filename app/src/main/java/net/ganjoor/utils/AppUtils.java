@@ -8,6 +8,7 @@ import android.util.TypedValue;
 
 public class AppUtils {
     public static final String BASE_URL = "http://localhost:7080/";
+    public static final String TOKEN = "TOKEN";
 
     /**
      * Converting dp to pixel
