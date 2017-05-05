@@ -1,5 +1,6 @@
 package net.ganjoor.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,8 +17,10 @@ import net.ganjoor.model.Poet;
 import net.ganjoor.model.PoetPojo;
 import net.ganjoor.service.APIServices;
 import net.ganjoor.service.RetrofitUtils;
+import net.ganjoor.ui.PoemActivity;
 import net.ganjoor.utils.AppUtils;
 import net.ganjoor.utils.GridSpacingItemDecoration;
+import net.ganjoor.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +68,19 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
                     }
                 }
         );
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(getActivity(), PoemActivity.class);
+                intent.putExtra("poet", poetList.get(position));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
         return view;
     }
 
