@@ -12,4 +12,15 @@
         <item name="android:textColorPrimary">@color/blackT87</item>
         <item name="android:textColorSecondary">@color/grey500</item>
     </style>
+    <style name="CollapsingToolbarTextStyle">
+        <item name="android:textSize">@dimen/text_size_medium</item>
+        <item name="android:textColor">@color/blackT87</item>
+    </style>
+    <style name="AppThemeCustomNoToolbar" parent="AppThemeLight">
+        <!-- Customize your theme here.-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/grey500</item>
+    </style>
 </resources>
