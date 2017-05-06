@@ -19,6 +19,7 @@ import net.ganjoor.service.APIServices;
 import net.ganjoor.service.RetrofitUtils;
 import net.ganjoor.ui.PoemActivity;
 import net.ganjoor.utils.AppUtils;
+import net.ganjoor.utils.EndlessRecyclerViewScrollListener;
 import net.ganjoor.utils.GridSpacingItemDecoration;
 import net.ganjoor.utils.RecyclerItemClickListener;
 
@@ -39,6 +40,10 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
 
     private PoetAdapter adapter;
     private List<Poet> poetList;
+    private List<Poet> poetListAll = new ArrayList<>();
+    private static int OFFSET = 50;
+    private int page = 0;
+    private GridLayoutManager mLayoutManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
         ButterKnife.bind(this, view);
         poetList = new ArrayList<>();
         adapter = new PoetAdapter(getActivity(), poetList);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getActivity(), 2);
+        mLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10, getResources()), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -64,7 +69,7 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
                 new Runnable() {
                     @Override
                     public void run() {
-                        getPoets();
+                        getPoets(0);
                     }
                 }
         );
@@ -81,21 +86,35 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
 
             }
         }));
+        addScrollListener();
         return view;
     }
 
-    private void getPoets() {
+    private void addScrollListener() {
+        recyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
+            @Override
+            public void onLoadMore(int pageLoaded, int totalItemsCount) {
+                page++;
+                getPoets(page * OFFSET);
+            }
+        });
+    }
+
+    private void getPoets(int offset) {
         swipeRefreshLayout.setRefreshing(true);
         APIServices apiServices = RetrofitUtils.getRetrofit().create(APIServices.class);
-        Call<PoetPojo> call = apiServices.poets();
+        Call<PoetPojo> call = apiServices.poets(offset);
         call.enqueue(new Callback<PoetPojo>() {
             @Override
             public void onResponse(Call<PoetPojo> call, Response<PoetPojo> response) {
-                PoetPojo poetPojo = response.body();
-                poetList.clear();
-                poetList.addAll(poetPojo.getPoets());
-                adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
+                PoetPojo poetPojo = response.body();
+                if (poetPojo.getPoets().size() != 0) {
+                    poetListAll.addAll(poetPojo.getPoets());
+                    poetList.clear();
+                    poetList.addAll(poetListAll);
+                    adapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -111,6 +130,9 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        getPoets();
+        poetListAll.clear();
+        addScrollListener();
+        page = 0;
+        getPoets(0);
     }
 }
