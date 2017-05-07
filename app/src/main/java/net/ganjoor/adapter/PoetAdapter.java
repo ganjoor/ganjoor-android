@@ -40,7 +40,7 @@ public class PoetAdapter extends RecyclerView.Adapter<PoetAdapter.MyViewHolder> 
     public void onBindViewHolder(PoetAdapter.MyViewHolder holder, int position) {
         Poet poet = poetList.get(position);
         holder.title.setText(poet.getName());
-        holder.thumbnail.setBackgroundColor(AppUtils.getRandomMaterialColor("400", mContext.getResources(), mContext.getPackageName()));
+        holder.thumbnail.setBackgroundColor(AppUtils.getRandomMaterialColor("400"));
         // loading poet image using Glide library
         // Glide.with(mContext).load(poet.getThumbnail()).into(holder.thumbnail);
 
