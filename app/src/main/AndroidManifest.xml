@@ -25,6 +25,9 @@
         <activity
             android:name=".ui.PoemActivity"
             android:theme="@style/AppThemeCustomNoToolbar" />
+        <activity
+            android:name=".ui.VerseActivity"
+            android:theme="@style/AppThemeCustomNoToolbar" />
     </application>
 
 </manifest>

@@ -2,7 +2,6 @@ package net.ganjoor.ui;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -13,19 +12,17 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.TextView;
 
 import net.ganjoor.R;
-import net.ganjoor.adapter.PoemAdapter;
+import net.ganjoor.adapter.VerseAdapter;
 import net.ganjoor.model.Poem;
-import net.ganjoor.model.PoemPojo;
-import net.ganjoor.model.Poet;
+import net.ganjoor.model.Verse;
+import net.ganjoor.model.VersePojo;
 import net.ganjoor.service.APIServices;
 import net.ganjoor.service.RetrofitUtils;
 import net.ganjoor.utils.AppUtils;
 import net.ganjoor.utils.GridSpacingItemDecoration;
-import net.ganjoor.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class PoemActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -48,78 +45,61 @@ public class PoemActivity extends AppCompatActivity implements SwipeRefreshLayou
     AppBarLayout appBarLayout;
     @BindView(R.id.name_poet)
     TextView namePoet;
-    @BindView(R.id.description_poet)
-    TextView descriptionPoet;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
-    private Poet poet;
-    private PoemAdapter adapter;
-    private List<Poem> poemList = new ArrayList<>();
+    private Poem poem;
+    private VerseAdapter adapter;
+    private List<Verse> verseList = new ArrayList<>();
     private Typeface typeface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_poem);
+        setContentView(R.layout.activity_verse);
         typeface = Typeface.createFromAsset(this.getAssets(), "fonts/DroidNaskh-Regular.ttf");
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
-        poet = getIntent().getParcelableExtra("poet");
-        namePoet.setText(poet.getName());
-        descriptionPoet.setText(poet.getDescription());
-        initCollapsingToolbar(poet.getName());
-        adapter = new PoemAdapter(this, poemList);
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
+        poem = getIntent().getParcelableExtra("poem");
+        String poetName = getIntent().getStringExtra("poetName");
+        namePoet.setText(poetName + " - " + poem.getTitle());
+        initCollapsingToolbar(poetName + " - " + poem.getTitle());
+        adapter = new VerseAdapter(this, verseList);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10, getResources()), true));
+        recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, AppUtils.dpToPx(1, getResources()), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(PoemActivity.this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                Intent intent = new Intent(PoemActivity.this, VerseActivity.class);
-                intent.putExtra("poem", poemList.get(position));
-                intent.putExtra("poetName", poet.getName());
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(
                 new Runnable() {
                     @Override
                     public void run() {
-                        getPoemByCategory(poet.getCategoryId());
+                        getVerseByPoem(poem.getId());
                     }
                 }
         );
     }
 
-    private void getPoemByCategory(String categoryId) {
+    private void getVerseByPoem(String poemId) {
         swipeRefreshLayout.setRefreshing(true);
         APIServices apiServices = RetrofitUtils.getRetrofit().create(APIServices.class);
-        Call<PoemPojo> call = apiServices.poems(categoryId);
-        call.enqueue(new Callback<PoemPojo>() {
+
+        Call<VersePojo> call = apiServices.verses(poemId);
+        call.enqueue(new Callback<VersePojo>() {
             @Override
-            public void onResponse(Call<PoemPojo> call, Response<PoemPojo> response) {
+            public void onResponse(Call<VersePojo> call, Response<VersePojo> response) {
                 swipeRefreshLayout.setRefreshing(false);
-                PoemPojo poemPojo = response.body();
-                poemList.clear();
-                poemList.addAll(poemPojo.getPoems());
+                VersePojo versePojo = response.body();
+                verseList.clear();
+                verseList.addAll(versePojo.getVerses());
                 adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<PoemPojo> call, Throwable t) {
+            public void onFailure(Call<VersePojo> call, Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
-                t.printStackTrace();
-
             }
         });
     }
@@ -159,7 +139,7 @@ public class PoemActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        getPoemByCategory(poet.getCategoryId());
+        getVerseByPoem(poem.getId());
     }
 
     @Override

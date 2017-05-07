@@ -33,7 +33,7 @@
                 android:paddingLeft="@dimen/poet_title_padding"
                 android:paddingRight="@dimen/poet_title_padding"
                 android:paddingTop="@dimen/poet_title_padding"
-                android:textColor="@color/poet_title"
+                android:textColor="@color/title"
                 android:textSize="@dimen/poet_title" />
 
         </RelativeLayout>

@@ -15,27 +15,15 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/thumbnail"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/poet_cover_height"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:scaleType="fitXY" />
-
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/verse_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/thumbnail"
-                android:gravity="center"
                 android:paddingLeft="@dimen/poet_title_padding"
                 android:paddingRight="@dimen/poet_title_padding"
                 android:paddingTop="@dimen/poet_title_padding"
                 android:textColor="@color/title"
-                android:textSize="@dimen/poet_title" />
-
+                android:textSize="@dimen/verse_text" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
