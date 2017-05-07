@@ -16,8 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+
 import net.ganjoor.R;
-import net.ganjoor.adapter.PoemAdapter;
 import net.ganjoor.model.Poem;
 import net.ganjoor.model.PoemPojo;
 import net.ganjoor.model.Poet;
@@ -25,14 +28,9 @@ import net.ganjoor.service.APIServices;
 import net.ganjoor.service.RetrofitUtils;
 import net.ganjoor.utils.AppUtils;
 import net.ganjoor.utils.GridSpacingItemDecoration;
-import net.ganjoor.utils.RecyclerItemClickListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,9 +53,8 @@ public class PoemActivity extends AppCompatActivity implements SwipeRefreshLayou
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     private Poet poet;
-    private PoemAdapter adapter;
-    private List<Poem> poemList = new ArrayList<>();
     private Typeface typeface;
+    private FastItemAdapter<Poem> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,26 +67,22 @@ public class PoemActivity extends AppCompatActivity implements SwipeRefreshLayou
         namePoet.setText(poet.getName());
         descriptionPoet.setText(poet.getDescription());
         initCollapsingToolbar(poet.getName());
-        adapter = new PoemAdapter(this, poemList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10, getResources()), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(PoemActivity.this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        fastItemAdapter = new FastItemAdapter<>();
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<Poem>() {
             @Override
-            public void onItemClick(View view, int position) {
+            public boolean onClick(View v, IAdapter<Poem> adapter, Poem poem, int position) {
                 Intent intent = new Intent(PoemActivity.this, VerseActivity.class);
-                intent.putExtra("poem", poemList.get(position));
+                intent.putExtra("poem", poem);
                 intent.putExtra("poetName", poet.getName());
                 startActivity(intent);
+                return false;
             }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
+        });
+        recyclerView.setAdapter(fastItemAdapter);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(
                 new Runnable() {
@@ -110,9 +103,8 @@ public class PoemActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void onResponse(Call<PoemPojo> call, Response<PoemPojo> response) {
                 swipeRefreshLayout.setRefreshing(false);
                 PoemPojo poemPojo = response.body();
-                poemList.clear();
-                poemList.addAll(poemPojo.getPoems());
-                adapter.notifyDataSetChanged();
+                fastItemAdapter.clear();
+                fastItemAdapter.add(poemPojo.getPoems());
             }
 
             @Override

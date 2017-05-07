@@ -5,6 +5,8 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.TypedValue;
 
+import net.ganjoor.MyApplication;
+
 
 public class AppUtils {
     public static final String BASE_URL = "http://localhost:7080/";
@@ -17,7 +19,9 @@ public class AppUtils {
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
 
-    public static int getRandomMaterialColor(String typeColor, Resources r, String packageName) {
+    public static int getRandomMaterialColor(String typeColor) {
+        Resources r = MyApplication.getAppContext().getResources();
+        String packageName = MyApplication.getAppContext().getPackageName();
         int returnColor = Color.GRAY;
         int arrayId = r.getIdentifier("mdcolor_" + typeColor, "array", packageName);
 

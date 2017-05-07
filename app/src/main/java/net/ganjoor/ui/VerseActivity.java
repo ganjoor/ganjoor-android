@@ -12,10 +12,14 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+
 import net.ganjoor.R;
-import net.ganjoor.adapter.VerseAdapter;
 import net.ganjoor.model.Poem;
 import net.ganjoor.model.Verse;
 import net.ganjoor.model.VersePojo;
@@ -24,12 +28,8 @@ import net.ganjoor.service.RetrofitUtils;
 import net.ganjoor.utils.AppUtils;
 import net.ganjoor.utils.GridSpacingItemDecoration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,9 +50,8 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     private Poem poem;
-    private VerseAdapter adapter;
-    private List<Verse> verseList = new ArrayList<>();
     private Typeface typeface;
+    private FastItemAdapter<Verse> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +64,10 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
         String poetName = getIntent().getStringExtra("poetName");
         namePoet.setText(poetName + " - " + poem.getTitle());
         initCollapsingToolbar(poetName + " - " + poem.getTitle());
-        adapter = new VerseAdapter(this, verseList);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, AppUtils.dpToPx(1, getResources()), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(
                 new Runnable() {
@@ -80,6 +77,18 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
                     }
                 }
         );
+        //create our FastAdapter which will manage everything
+        fastItemAdapter = new FastItemAdapter<>();
+        fastItemAdapter.withSelectable(true);
+        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<Verse>() {
+            @Override
+            public boolean onClick(View v, IAdapter<Verse> adapter, Verse item, int position) {
+                // consume otherwise radio/checkbox will be deselected
+                return true;
+            }
+        });
+        fastItemAdapter.withItemEvent(new Verse.CheckBoxClickEvent());
+        recyclerView.setAdapter(fastItemAdapter);
     }
 
     private void getVerseByPoem(String poemId) {
@@ -92,9 +101,8 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
             public void onResponse(Call<VersePojo> call, Response<VersePojo> response) {
                 swipeRefreshLayout.setRefreshing(false);
                 VersePojo versePojo = response.body();
-                verseList.clear();
-                verseList.addAll(versePojo.getVerses());
-                adapter.notifyDataSetChanged();
+                fastItemAdapter.clear();
+                fastItemAdapter.add(versePojo.getVerses());
             }
 
             @Override

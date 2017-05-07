@@ -3,11 +3,24 @@ package net.ganjoor.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.mikepenz.fastadapter.items.AbstractItem;
 
-public class Poem implements Parcelable {
+import net.ganjoor.R;
+import net.ganjoor.utils.AppUtils;
+
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+public class Poem extends AbstractItem<Poem, Poem.MyViewHolder> implements Parcelable {
     @SerializedName("id")
     @Expose
     private String id;
@@ -87,4 +100,43 @@ public class Poem implements Parcelable {
             return new Poem[size];
         }
     };
+    @Override
+    public int getType() {
+        return R.id.fastadapter_sampleitem_id;
+    }
+
+    @Override
+    public int getLayoutRes() {
+        return R.layout.poem_card;
+    }
+    @Override
+    public void bindView(Poem.MyViewHolder viewHolder, List<Object> payloads) {
+        //call super so the selection is already handled for you
+        super.bindView(viewHolder, payloads);
+        viewHolder.title.setText(title);
+        viewHolder.thumbnail.setBackgroundColor(AppUtils.getRandomMaterialColor("500"));
+
+    }
+
+    //reset the view here (this is an optional method, but recommended)
+    @Override
+    public void unbindView(Poem.MyViewHolder holder) {
+        super.unbindView(holder);
+
+    }
+    @Override
+    public MyViewHolder getViewHolder(View v) {
+        return new Poem.MyViewHolder(v);
+    }
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.title)
+        TextView title;
+        @BindView(R.id.thumbnail)
+        ImageView thumbnail;
+
+        public MyViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
 }

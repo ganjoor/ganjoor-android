@@ -55,4 +55,10 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$RetrofitVersion"
     //use in development
     compile 'com.squareup.okhttp3:logging-interceptor:3.7.0'
+
+    //fast adapter
+    compile('com.mikepenz:fastadapter:2.5.2@aar') {
+        transitive = true
+    }
+    compile 'com.mikepenz:fastadapter-commons:2.5.2@aar'
 }
