@@ -2,6 +2,7 @@ package net.ganjoor.ui;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
@@ -12,6 +13,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import net.ganjoor.R;
@@ -23,6 +25,7 @@ import net.ganjoor.service.APIServices;
 import net.ganjoor.service.RetrofitUtils;
 import net.ganjoor.utils.AppUtils;
 import net.ganjoor.utils.GridSpacingItemDecoration;
+import net.ganjoor.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +76,20 @@ public class PoemActivity extends AppCompatActivity implements SwipeRefreshLayou
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10, getResources()), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
+        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(PoemActivity.this, recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent(PoemActivity.this, VerseActivity.class);
+                intent.putExtra("poem", poemList.get(position));
+                intent.putExtra("poetName", poet.getName());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onLongItemClick(View view, int position) {
+
+            }
+        }));
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(
                 new Runnable() {

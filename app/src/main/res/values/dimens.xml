@@ -7,6 +7,7 @@
     <dimen name="poet_cover_height">140dp</dimen>
     <dimen name="poet_title_padding">10dp</dimen>
     <dimen name="poet_title">15sp</dimen>
+    <dimen name="verse_text">16sp</dimen>
     <dimen name="detail_backdrop_height">250dp</dimen>
     <dimen name="backdrop_name_poet">20sp</dimen>
     <dimen name="backdrop_description_poet">14sp</dimen>
