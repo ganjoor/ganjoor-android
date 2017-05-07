@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+
 import net.ganjoor.R;
-import net.ganjoor.adapter.PoetAdapter;
 import net.ganjoor.model.Poet;
 import net.ganjoor.model.PoetPojo;
 import net.ganjoor.service.APIServices;
@@ -21,10 +24,6 @@ import net.ganjoor.ui.PoemActivity;
 import net.ganjoor.utils.AppUtils;
 import net.ganjoor.utils.EndlessRecyclerViewScrollListener;
 import net.ganjoor.utils.GridSpacingItemDecoration;
-import net.ganjoor.utils.RecyclerItemClickListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,12 +37,10 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
 
-    private PoetAdapter adapter;
-    private List<Poet> poetList;
-    private List<Poet> poetListAll = new ArrayList<>();
     private static int OFFSET = 50;
     private int page = 0;
     private GridLayoutManager mLayoutManager;
+    private FastItemAdapter<Poet> fastItemAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,13 +54,10 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
         View view = inflater.inflate(R.layout.fragment_dashboard,
                 container, false);
         ButterKnife.bind(this, view);
-        poetList = new ArrayList<>();
-        adapter = new PoetAdapter(getActivity(), poetList);
         mLayoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, AppUtils.dpToPx(10, getResources()), true));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(adapter);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.post(
                 new Runnable() {
@@ -73,19 +67,18 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
                     }
                 }
         );
-        recyclerView.addOnItemTouchListener(new RecyclerItemClickListener(getActivity(), recyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+        fastItemAdapter = new FastItemAdapter<>();
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<Poet>() {
             @Override
-            public void onItemClick(View view, int position) {
+            public boolean onClick(View v, IAdapter<Poet> adapter, Poet poet, int position) {
                 Intent intent = new Intent(getActivity(), PoemActivity.class);
-                intent.putExtra("poet", poetList.get(position));
+                intent.putExtra("poet", poet);
                 startActivity(intent);
+                return false;
             }
-
-            @Override
-            public void onLongItemClick(View view, int position) {
-
-            }
-        }));
+        });
+        recyclerView.setAdapter(fastItemAdapter);
+        addScrollListener();
         addScrollListener();
         return view;
     }
@@ -110,10 +103,7 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
                 swipeRefreshLayout.setRefreshing(false);
                 PoetPojo poetPojo = response.body();
                 if (poetPojo.getPoets().size() != 0) {
-                    poetListAll.addAll(poetPojo.getPoets());
-                    poetList.clear();
-                    poetList.addAll(poetListAll);
-                    adapter.notifyDataSetChanged();
+                    fastItemAdapter.add(poetPojo.getPoets());
                 }
             }
 
@@ -130,7 +120,7 @@ public class DashboardFragment extends Fragment implements SwipeRefreshLayout.On
 
     @Override
     public void onRefresh() {
-        poetListAll.clear();
+        fastItemAdapter.clear();
         addScrollListener();
         page = 0;
         getPoets(0);
