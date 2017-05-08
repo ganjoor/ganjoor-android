@@ -6,6 +6,11 @@ import android.graphics.Color;
 import android.util.TypedValue;
 
 import net.ganjoor.MyApplication;
+import net.ganjoor.model.Verse;
+import net.ganjoor.model.VerseCombine;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AppUtils {
@@ -32,5 +37,16 @@ public class AppUtils {
             colors.recycle();
         }
         return returnColor;
+    }
+    public static List<VerseCombine> getVerseCombine(List<Verse> verses) {
+        List<VerseCombine> verseCombines = new ArrayList<>();
+        for (int i = 0; i < verses.size(); i += 2) {
+            VerseCombine verseCombine = new VerseCombine();
+            verseCombine.setPoemId(verses.get(i).getPoemId());
+            verseCombine.setTextRight(verses.get(i).getText());
+            verseCombine.setTextLeft(verses.get(i + 1).getText());
+            verseCombines.add(verseCombine);
+        }
+        return verseCombines;
     }
 }

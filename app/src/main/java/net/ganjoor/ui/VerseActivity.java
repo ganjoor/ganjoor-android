@@ -21,7 +21,7 @@ import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 
 import net.ganjoor.R;
 import net.ganjoor.model.Poem;
-import net.ganjoor.model.Verse;
+import net.ganjoor.model.VerseCombine;
 import net.ganjoor.model.VersePojo;
 import net.ganjoor.service.APIServices;
 import net.ganjoor.service.RetrofitUtils;
@@ -51,7 +51,7 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
     SwipeRefreshLayout swipeRefreshLayout;
     private Poem poem;
     private Typeface typeface;
-    private FastItemAdapter<Verse> fastItemAdapter;
+    private FastItemAdapter<VerseCombine> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +80,14 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
         fastItemAdapter.withSelectable(true);
-        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<Verse>() {
+        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<VerseCombine>() {
             @Override
-            public boolean onClick(View v, IAdapter<Verse> adapter, Verse item, int position) {
+            public boolean onClick(View v, IAdapter<VerseCombine> adapter, VerseCombine item, int position) {
                 // consume otherwise radio/checkbox will be deselected
                 return true;
             }
         });
-        fastItemAdapter.withItemEvent(new Verse.CheckBoxClickEvent());
+        fastItemAdapter.withItemEvent(new VerseCombine.CheckBoxClickEvent());
         recyclerView.setAdapter(fastItemAdapter);
     }
 
@@ -102,7 +102,7 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
                 swipeRefreshLayout.setRefreshing(false);
                 VersePojo versePojo = response.body();
                 fastItemAdapter.clear();
-                fastItemAdapter.add(versePojo.getVerses());
+                fastItemAdapter.add(AppUtils.getVerseCombine(versePojo.getVerses()));
             }
 
             @Override
