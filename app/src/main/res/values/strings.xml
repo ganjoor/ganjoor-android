@@ -4,4 +4,6 @@
     <string name="title_bookmark">نشان‌شده</string>
     <string name="title_search">جستجو</string>
     <string name="title_settings">تنظیمات</string>
+    <string name="title_browser">browser</string>
+    <string name="title_share">share</string>
 </resources>
