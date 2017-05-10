@@ -2,16 +2,15 @@ package net.ganjoor.ui;
 
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,31 +38,27 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
-    @BindView(R.id.appbar)
-    AppBarLayout appBarLayout;
-    @BindView(R.id.name_poet)
-    TextView namePoet;
+    @BindView(R.id.title)
+    TextView title;
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout swipeRefreshLayout;
     private Poem poem;
-    private Typeface typeface;
     private FastItemAdapter<VerseCombine> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_verse);
-        typeface = Typeface.createFromAsset(this.getAssets(), "fonts/DroidNaskh-Regular.ttf");
         ButterKnife.bind(this);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         poem = getIntent().getParcelableExtra("poem");
         String poetName = getIntent().getStringExtra("poetName");
-        namePoet.setText(poetName + " - " + poem.getTitle());
-        initCollapsingToolbar(poetName + " - " + poem.getTitle());
+        title.setText(poetName + " - " + poem.getTitle());
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(1, AppUtils.dpToPx(1, getResources()), true));
@@ -112,39 +107,6 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
         });
     }
 
-    /**
-     * Initializing collapsing toolbar
-     * Will show and hide the toolbar title on scroll
-     *
-     * @param name
-     */
-    private void initCollapsingToolbar(final String name) {
-        collapsingToolbar.setTitle(" ");
-        collapsingToolbar.setCollapsedTitleTypeface(typeface);
-        collapsingToolbar.setExpandedTitleTypeface(typeface);
-        appBarLayout.setExpanded(true);
-
-        // hiding & showing the title when toolbar expanded & collapsed
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            boolean isShow = false;
-            int scrollRange = -1;
-
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                if (scrollRange == -1) {
-                    scrollRange = appBarLayout.getTotalScrollRange();
-                }
-                if (scrollRange + verticalOffset == 0) {
-                    collapsingToolbar.setTitle(name);
-                    isShow = true;
-                } else if (isShow) {
-                    collapsingToolbar.setTitle(" ");
-                    isShow = false;
-                }
-            }
-        });
-    }
-
     @Override
     public void onRefresh() {
         getVerseByPoem(poem.getId());
@@ -153,5 +115,26 @@ public class VerseActivity extends AppCompatActivity implements SwipeRefreshLayo
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_item, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.menu_share).setVisible(true);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

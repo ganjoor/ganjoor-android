@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_bookmark"
+        android:icon="@drawable/ic_bookmark_border_black_24dp"
+        android:menuCategory="secondary"
+        android:title="@string/title_bookmark"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_external"
+        android:icon="@drawable/ic_open_in_browser_black_24dp"
+        android:menuCategory="secondary"
+        android:title="@string/title_browser"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:menuCategory="secondary"
+        android:title="@string/title_share"
+        app:showAsAction="ifRoom" />
+</menu>
